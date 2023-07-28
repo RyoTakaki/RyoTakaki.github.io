@@ -179,13 +179,22 @@
                 svg.append("g")
                     .attr("class", "axis")
                     .attr("transform", "translate(0," + height + ")")
-                    .call(d3.axisBottom(xs));
+                    .call(d3.axisBottom(xs).ticks(18));
 
-                svg.append("text")
+                svg.append("text" ,id="xaxis")
                     .attr("text-anchor", "middle")
-                    .attr("x", margin.left + width / 2)
-                    .attr("y", height + margin.top + 250)
-                    .text("Total study hours per subject [hour]")
+                    .attr("x", width / 2)
+                    .attr("y", height + 50)
+                    .text("Week")
+                    .style("font-family", "sans-serif")
+                    .style("font-size", 20);
+                
+                svg.append("text",id="yaxis")
+                    .attr("text-anchor", "middle")
+                    .attr("x", -height/2)
+                    .attr("y", -40)
+                    .attr("transform", "rotate(-90)")
+                    .text("Total study hours per week [hour]")
                     .style("font-family", "sans-serif")
                     .style("font-size", 20);
 
@@ -196,8 +205,8 @@
                     .enter()
                     .append('g')
                     .append("text")
-                    .attr('x', function (d, i) { return 30 + i * 100 })
-                    .attr('y', 10)
+                    .attr('x', -150)
+                    .attr('y', function (d, i) { return 45 + i * 85 })
                     .text(function (d) { return d.name; })
                     .style("fill", function (d) { return myColor(d.name) })
                     .style("font-size", 15)
