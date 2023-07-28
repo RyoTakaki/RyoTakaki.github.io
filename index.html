@@ -2,8 +2,9 @@
 <html>
 
 <head>
-    <!-- Ref: https://www.wabiapp.com/WabiSampleSource/html5/contents_change_disp_none.html -->
     <title>Narrative Visualization</title>
+
+    <!-- Ref: https://www.wabiapp.com/WabiSampleSource/html5/contents_change_disp_none.html -->
     <style>
         .page {
             display: none;
@@ -26,15 +27,15 @@
     <div class="page active" id="page1">
         <h1>Page 1</h1>
         <button onclick="change_page(2)">Next</button>
-        <svg width=300 height=300 id="svg1">
-        </svg>
+        <svg id="svg1"></svg>
         <script>
             async function init1() {
-                const data = await d3.csv("https://flunky.github.io/cars2017.csv");
+                // Reference: https://d3-graph-gallery.com/graph/barplot_horizontal.html
+                const data = await d3.csv("https://RyoTakaki.github.io/Learning_time.csv");
                 console.log(data);
-                var width = 1200; var height = 800; var margin = 50;
-                var xs = d3.scaleLog().domain([10, 150]).range([0, width]);
-                var ys = d3.scaleLog().domain([10, 150]).range([height, 0]);
+                var width = 800; var height = 500; var margin = 150;
+                var xs = d3.scaleLinear().domain([10, 150]).range([0, width]);
+                var ys = d3.scaleLinear().domain([10, 150]).range([height, 0]);
                 d3.select("#svg1")
                     .attr("width", width + 2 * margin)
                     .attr("height", height + 2 * margin)
@@ -43,10 +44,10 @@
                     .selectAll()
                     .data(data)
                     .enter()
-                    .append("circle")
-                    .attr("cx", function (d, i) { return xs(d.AverageCityMPG) })
-                    .attr("cy", function (d, i) { return ys(Number(d.AverageHighwayMPG)) })
-                    .attr("r", function (d, i) { return 2 + Number(d.EngineCylinders) });
+                    .append("rect")
+                    .attr("x", xs(0))
+                    .attr("y", function(d) { return ys(d.Course);})
+                    .attr("width", function(d) { return xs(d.Total_hour) })
                 d3.select("#svg1")
                     .append("g")
                     .attr("transform", "translate(" + margin + "," + margin + ")")
@@ -67,13 +68,12 @@
         <h1>Page 2</h1>
         <button onclick="change_page(1)">Prev...</button>
         <button onclick="change_page(3)">Next</button>
-        <svg width=300 height=300 id="svg2">
-        </svg>
+        <svg id="svg2"></svg>
         <script>
             async function init2() {
                 const data = await d3.csv("https://flunky.github.io/cars2017.csv");
                 console.log(data);
-                var width = 1200; var height = 800; var margin = 50;
+                var width = 800; var height = 500; var margin = 150;
                 var xs = d3.scaleLog().domain([10, 150]).range([0, width]);
                 var ys = d3.scaleLog().domain([10, 150]).range([height, 0]);
                 d3.select("#svg2")
@@ -107,13 +107,12 @@
     <div class="page" id="page3">
         <h1>Page 3</h1>
         <button onclick="change_page(2)">Prev.</button>
-        <svg width=300 height=300 id="svg3">
-        </svg>
+        <svg id="svg3"></svg>
         <script>
             async function init3() {
                 const data = await d3.csv("https://flunky.github.io/cars2017.csv");
                 console.log(data);
-                var width = 1200; var height = 800; var margin = 50;
+                var width = 800; var height = 500; var margin = 150;
                 var xs = d3.scaleLog().domain([10, 150]).range([0, width]);
                 var ys = d3.scaleLog().domain([10, 150]).range([height, 0]);
                 d3.select("#svg3")
