@@ -3,7 +3,6 @@
 
 <head>
     <title>Narrative Visualization</title>
-
     <!-- Ref: https://www.wabiapp.com/WabiSampleSource/html5/contents_change_disp_none.html -->
     <style>
         .page {
@@ -14,12 +13,10 @@
             display: block;
         }
 
-        circle {
-            fill: lightblue;
-            stroke: black;
+        .axis text {
+            font-size: 15px;
         }
     </style>
-
 </head>
 
 <body onload="init1(), init2(), init3()">
@@ -33,33 +30,49 @@
                 // Reference: https://d3-graph-gallery.com/graph/barplot_horizontal.html
                 const data = await d3.csv("https://RyoTakaki.github.io/Learning_time.csv");
                 console.log(data);
-                var width = 800; var height = 500; var margin = 150;
-                var xs = d3.scaleLinear().domain([10, 150]).range([0, width]);
-                var ys = d3.scaleLinear().domain([10, 150]).range([height, 0]);
+                var margin = { top: 50, right: 130, bottom: 80, left: 300 },
+                    width = 1200 - margin.left - margin.right,
+                    height = 800 - margin.top - margin.bottom;
+                var xs = d3.scaleLinear().domain([0, 400]).range([0, width]);
+                var ys = d3.scaleBand().domain(data.map(function (d) { return d.Course; })).range([0, height]).padding(.1);
+
                 d3.select("#svg1")
-                    .attr("width", width + 2 * margin)
-                    .attr("height", height + 2 * margin)
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
                     .append("g")
-                    .attr("transform", "translate(" + margin + "," + margin + ")")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
                     .selectAll()
                     .data(data)
                     .enter()
                     .append("rect")
                     .attr("x", xs(0))
-                    .attr("y", function(d) { return ys(d.Course);})
-                    .attr("width", function(d) { return xs(d.Total_hour) })
+                    .attr("y", function (d) { return ys(d.Course); })
+                    .attr("width", function (d) { return xs(d.Total_hour) })
+                    .attr("height", ys.bandwidth())
+                    .attr("fill", "lightblue");
+
+                // Y axis
                 d3.select("#svg1")
                     .append("g")
-                    .attr("transform", "translate(" + margin + "," + margin + ")")
-                    .call(d3.axisLeft(ys)
-                        .tickValues([10, 20, 50, 100])
-                        .tickFormat(d3.format("~s")));
+                    .attr("class", "axis")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                    .call(d3.axisLeft(ys));
+
+                // X axis
                 d3.select("#svg1")
                     .append("g")
-                    .attr("transform", "translate(" + margin + "," + (height + margin) + ")")
-                    .call(d3.axisBottom(xs)
-                        .tickValues([10, 20, 50, 100])
-                        .tickFormat(d3.format("~s")));
+                    .attr("class", "axis")
+                    .attr("transform", "translate(" + margin.left + ", " + (height + margin.top) + ")")
+                    .call(d3.axisBottom(xs));
+
+                d3.select("#svg1")
+                    .append("text")
+                    .attr("text-anchor", "middle")
+                    .attr("x", margin.left + width/2)
+                    .attr("y", height + margin.top + 50)
+                    .text("Total study hours per subject [hour]")
+                    .style("font-family", "sans-serif")
+                    .style("font-size", 20);
             }
         </script>
     </div>
@@ -73,7 +86,7 @@
             async function init2() {
                 const data = await d3.csv("https://flunky.github.io/cars2017.csv");
                 console.log(data);
-                var width = 800; var height = 500; var margin = 150;
+                var width = 800; var height = 500; var margin = 100;
                 var xs = d3.scaleLog().domain([10, 150]).range([0, width]);
                 var ys = d3.scaleLog().domain([10, 150]).range([height, 0]);
                 d3.select("#svg2")
@@ -112,7 +125,7 @@
             async function init3() {
                 const data = await d3.csv("https://flunky.github.io/cars2017.csv");
                 console.log(data);
-                var width = 800; var height = 500; var margin = 150;
+                var width = 800; var height = 500; var margin = 100;
                 var xs = d3.scaleLog().domain([10, 150]).range([0, width]);
                 var ys = d3.scaleLog().domain([10, 150]).range([height, 0]);
                 d3.select("#svg3")
