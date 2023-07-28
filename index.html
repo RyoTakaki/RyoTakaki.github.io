@@ -126,35 +126,87 @@
         <svg id="svg2"></svg>
         <script>
             async function init2() {
-                const data = await d3.csv("https://flunky.github.io/cars2017.csv");
+                // Reference: https://d3-graph-gallery.com/graph/connectedscatter_legend.html
+                const data = await d3.csv("https://RyoTakaki.github.io/Learning_time_week_time.csv");
                 console.log(data);
-                var width = 800; var height = 500; var margin = 100;
-                var xs = d3.scaleLog().domain([10, 150]).range([0, width]);
-                var ys = d3.scaleLog().domain([10, 150]).range([height, 0]);
-                d3.select("#svg2")
-                    .attr("width", width + 2 * margin)
-                    .attr("height", height + 2 * margin)
+                var margin = { top: 50, right: 130, bottom: 80, left: 300 },
+                    width = 1200 - margin.left - margin.right,
+                    height = 800 - margin.top - margin.bottom;
+
+                var allGroup = ["CS410_TIS", "CS498_IoT", "CS598DL4H", "CS412_IDM", "CS598_DMC", "CS598_PSL", "CS441_AML", "CS416_DV"]
+                var dataReady = allGroup.map(function (grpName) {
+                    return {
+                        name: grpName,
+                        values: data.map(function (d) {
+                            return { week: d.Week, value: +d[grpName] };
+                        })
+                    };
+                });
+
+                // A color scale: one color for each group
+                var myColor = d3.scaleOrdinal()
+                    .domain(allGroup)
+                    .range(d3.schemeSet2);
+
+                var xs = d3.scaleLinear().domain([0, 18]).range([0, width]);
+                var ys = d3.scaleLinear().domain([0, 50]).range([height, 0]);
+                var line = d3.line()
+                    .x(function (d) { return xs(+d.week) })
+                    .y(function (d) { return ys(+d.value) });
+
+                var svg = d3.select("#svg2")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
                     .append("g")
-                    .attr("transform", "translate(" + margin + "," + margin + ")")
-                    .selectAll()
-                    .data(data)
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                svg.selectAll()
+                    .data(dataReady)
                     .enter()
-                    .append("circle")
-                    .attr("cx", function (d, i) { return xs(d.AverageCityMPG) })
-                    .attr("cy", function (d, i) { return ys(Number(d.AverageHighwayMPG)) })
-                    .attr("r", function (d, i) { return 2 + Number(d.EngineCylinders) });
-                d3.select("#svg2")
-                    .append("g")
-                    .attr("transform", "translate(" + margin + "," + margin + ")")
-                    .call(d3.axisLeft(ys)
-                        .tickValues([10, 20, 50, 100])
-                        .tickFormat(d3.format("~s")));
-                d3.select("#svg2")
-                    .append("g")
-                    .attr("transform", "translate(" + margin + "," + (height + margin) + ")")
-                    .call(d3.axisBottom(xs)
-                        .tickValues([10, 20, 50, 100])
-                        .tickFormat(d3.format("~s")));
+                    .append("path")
+                    .attr("class", function (d) { return d.name })
+                    .attr("d", function (d) { return line(d.values) })
+                    .attr("stroke", function (d) { return myColor(d.name) })
+                    .style("stroke-width", 4)
+                    .style("fill", "none");
+
+                // Y axis
+                svg.append("g")
+                    .attr("class", "axis")
+                    .call(d3.axisLeft(ys));
+
+                // X axis
+                svg.append("g")
+                    .attr("class", "axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(d3.axisBottom(xs));
+
+                svg.append("text")
+                    .attr("text-anchor", "middle")
+                    .attr("x", margin.left + width / 2)
+                    .attr("y", height + margin.top + 250)
+                    .text("Total study hours per subject [hour]")
+                    .style("font-family", "sans-serif")
+                    .style("font-size", 20);
+
+                // Add a legend (interactive)
+                svg
+                    .selectAll("myLegend")
+                    .data(dataReady)
+                    .enter()
+                    .append('g')
+                    .append("text")
+                    .attr('x', function (d, i) { return 30 + i * 100 })
+                    .attr('y', 10)
+                    .text(function (d) { return d.name; })
+                    .style("fill", function (d) { return myColor(d.name) })
+                    .style("font-size", 15)
+                    .on("click", function (d) {
+                        // is the element currently visible ?
+                        currentOpacity = d3.selectAll("." + d.name).style("opacity")
+                        // Change the opacity: from 0 to 1 or from 1 to 0
+                        d3.selectAll("." + d.name).transition().style("opacity", currentOpacity == 1 ? 0 : 1)
+                    })
             }
         </script>
     </div>
@@ -167,6 +219,7 @@
         <svg id="svg3"></svg>
         <script>
             async function init3() {
+                // Reference: https://d3-graph-gallery.com/graph/line_filter.html
                 const data = await d3.csv("https://flunky.github.io/cars2017.csv");
                 console.log(data);
                 var width = 800; var height = 500; var margin = 100;
