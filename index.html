@@ -23,11 +23,14 @@
 
     <div class="page active" id="page1">
         <h1>Page 1</h1>
-        <button onclick="change_page(2)">Next</button>
+        <div>
+            <button onclick="change_page(2)">Next</button>
+        </div>
         <svg id="svg1"></svg>
         <script>
             async function init1() {
                 // Reference: https://d3-graph-gallery.com/graph/barplot_horizontal.html
+                // Reference: https://d3-graph-gallery.com/graph/interactivity_tooltip.html#template
                 const data = await d3.csv("https://RyoTakaki.github.io/Learning_time.csv");
                 console.log(data);
                 var margin = { top: 50, right: 130, bottom: 80, left: 300 },
@@ -35,6 +38,40 @@
                     height = 800 - margin.top - margin.bottom;
                 var xs = d3.scaleLinear().domain([0, 400]).range([0, width]);
                 var ys = d3.scaleBand().domain(data.map(function (d) { return d.Course; })).range([0, height]).padding(.1);
+
+                // create a tooltip
+                var Tooltip = d3.select("#page1")
+                    .append("div")
+                    .style("opacity", 0)
+                    .attr("class", "tooltip")
+                    .style("background-color", "white")
+                    .style("border", "solid")
+                    .style("border-width", "1px")
+                    .style("border-radius", "5px")
+                    .style("padding", "5px")
+
+                // Three function that change the tooltip when user hover / move / leave a cell
+                var mouseover = function (d) {
+                    Tooltip
+                        .style("opacity", 1)
+                    d3.select(this)
+                        .style("stroke", "grey")
+                        .style("opacity", 1)
+                }
+                var mousemove = function (d) {
+                    Tooltip
+                        .html("Total study hours: " + d.Total_hour + " [hour]")
+                        .style("position", "absolute")
+                        .style("left", (d3.mouse(this)[0] + margin.left) + "px")
+                        .style("top", (d3.mouse(this)[1] + margin.top + 50) + "px")
+                }
+                var mouseleave = function (d) {
+                    Tooltip
+                        .style("opacity", 0)
+                    d3.select(this)
+                        .style("stroke", "none")
+                        .style("opacity", 0.8)
+                }
 
                 d3.select("#svg1")
                     .attr("width", width + margin.left + margin.right)
@@ -49,7 +86,10 @@
                     .attr("y", function (d) { return ys(d.Course); })
                     .attr("width", function (d) { return xs(d.Total_hour) })
                     .attr("height", ys.bandwidth())
-                    .attr("fill", "lightblue");
+                    .attr("fill", "lightblue")
+                    .on("mouseover", mouseover)
+                    .on("mousemove", mousemove)
+                    .on("mouseleave", mouseleave);
 
                 // Y axis
                 d3.select("#svg1")
@@ -68,7 +108,7 @@
                 d3.select("#svg1")
                     .append("text")
                     .attr("text-anchor", "middle")
-                    .attr("x", margin.left + width/2)
+                    .attr("x", margin.left + width / 2)
                     .attr("y", height + margin.top + 50)
                     .text("Total study hours per subject [hour]")
                     .style("font-family", "sans-serif")
@@ -79,8 +119,10 @@
 
     <div class="page" id="page2">
         <h1>Page 2</h1>
-        <button onclick="change_page(1)">Prev...</button>
-        <button onclick="change_page(3)">Next</button>
+        <div>
+            <button onclick="change_page(1)">Prev...</button>
+            <button onclick="change_page(3)">Next</button>
+        </div>
         <svg id="svg2"></svg>
         <script>
             async function init2() {
@@ -119,7 +161,9 @@
 
     <div class="page" id="page3">
         <h1>Page 3</h1>
-        <button onclick="change_page(2)">Prev.</button>
+        <div>
+            <button onclick="change_page(2)">Prev.</button>
+        </div>
         <svg id="svg3"></svg>
         <script>
             async function init3() {
@@ -156,7 +200,7 @@
         </script>
     </div>
 
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
     <script>
 
         function change_page(page_num) {
