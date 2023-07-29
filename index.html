@@ -107,7 +107,6 @@
 
                 const makeAnnotations_min = d3.annotation()
                     .annotations(annotations_min)
-                    
 
                 d3.select("#svg1")
                     .attr("width", width + margin.left + margin.right)
@@ -126,16 +125,16 @@
                     .on("mouseover", mouseover)
                     .on("mousemove", mousemove)
                     .on("mouseleave", mouseleave);
-                
-                // Annotation
-                d3.select("#svg1")
-                .append("g")
-                .call(makeAnnotations_max);
 
                 // Annotation
                 d3.select("#svg1")
-                .append("g")
-                .call(makeAnnotations_min);
+                    .append("g")
+                    .call(makeAnnotations_max);
+
+                // Annotation
+                d3.select("#svg1")
+                    .append("g")
+                    .call(makeAnnotations_min);
 
                 // Y axis
                 d3.select("#svg1")
@@ -210,26 +209,30 @@
         <h1>Page 3</h1>
         <div>
             <button onclick="change_page(2)">Prev.</button>
+            <!-- Initialize a select button -->
+            <select id="selectButton"></select>
         </div>
         <svg id="svg3"></svg>
         <script>
             async function init3() {
                 // Reference: https://d3-graph-gallery.com/graph/connectedscatter_legend.html
-                const data = await d3.csv("https://RyoTakaki.github.io/Learning_time_week_time.csv");
+                // Reference: https://d3-graph-gallery.com/graph/line_filter.html
+                const data = await d3.csv("https://RyoTakaki.github.io/Learning_time_week_time_per_course.csv");
                 console.log(data);
                 var margin = { top: 50, right: 130, bottom: 80, left: 300 },
                     width = 1200 - margin.left - margin.right,
                     height = 800 - margin.top - margin.bottom;
 
-                var allGroup = ["CS410_TIS", "CS498_IoT", "CS598DL4H", "CS412_IDM", "CS598_DMC", "CS598_PSL", "CS441_AML", "CS416_DV"]
-                var dataReady = allGroup.map(function (grpName) {
-                    return {
-                        name: grpName,
-                        values: data.map(function (d) {
-                            return { week: d.Week, value: +d[grpName] };
-                        })
-                    };
-                });
+                var allGroup = ["CS410_TIS", "CS498_IoT", "CS598_DL4H", "CS412_IDM", "CS598_DMC", "CS598_PSL", "CS441_AML", "CS416_DV"]
+
+                // add the options to the button
+                d3.select("#selectButton")
+                    .selectAll('myOptions')
+                    .data(allGroup)
+                    .enter()
+                    .append('option')
+                    .text(function (d) { return d; }) // text showed in the menu
+                    .attr("value", function (d) { return d; }) // corresponding value returned by the button
 
                 // A color scale: one color for each group
                 var myColor = d3.scaleOrdinal()
@@ -238,9 +241,6 @@
 
                 var xs = d3.scaleLinear().domain([0, 18]).range([0, width]);
                 var ys = d3.scaleLinear().domain([0, 50]).range([height, 0]);
-                var line = d3.line()
-                    .x(function (d) { return xs(+d.week) })
-                    .y(function (d) { return ys(+d.value) });
 
                 var svg = d3.select("#svg3")
                     .attr("width", width + margin.left + margin.right)
@@ -248,13 +248,15 @@
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-                svg.selectAll()
-                    .data(dataReady)
-                    .enter()
+                var line = svg
+                    .append("g")
                     .append("path")
-                    .attr("class", function (d) { return d.name })
-                    .attr("d", function (d) { return line(d.values) })
-                    .attr("stroke", function (d) { return myColor(d.name) })
+                    .datum(data.filter(function (d) { return d.Course == allGroup[0] }))
+                    .attr("d", d3.line()
+                        .x(function (d) { return xs(+d.Week) })
+                        .y(function (d) { return ys(+d.TimePerWeek) })
+                    )
+                    .attr("stroke", function (d) { return myColor("CS410_TIS") })
                     .style("stroke-width", 4)
                     .style("fill", "none");
 
@@ -286,24 +288,33 @@
                     .style("font-family", "sans-serif")
                     .style("font-size", 20);
 
-                // Add a legend (interactive)
-                svg
-                    .selectAll("myLegend")
-                    .data(dataReady)
-                    .enter()
-                    .append('g')
-                    .append("text")
-                    .attr('x', -150)
-                    .attr('y', function (d, i) { return 45 + i * 85 })
-                    .text(function (d) { return d.name; })
-                    .style("fill", function (d) { return myColor(d.name) })
-                    .style("font-size", 15)
-                    .on("click", function (d) {
-                        // is the element currently visible ?
-                        currentOpacity = d3.selectAll("." + d.name).style("opacity")
-                        // Change the opacity: from 0 to 1 or from 1 to 0
-                        d3.selectAll("." + d.name).transition().style("opacity", currentOpacity == 1 ? 0 : 1)
-                    })
+                // A function that update the chart
+                function update(selectedGroup) {
+
+                    // Create new data with the selection?
+                    var dataFilter = data.filter(function (d) { return d.Course == selectedGroup })
+
+                    // Give these new data to update line
+                    line
+                        .datum(dataFilter)
+                        .transition()
+                        .duration(1000)
+                        .attr("d", d3.line()
+                            .x(function (d) { return xs(+d.Week) })
+                            .y(function (d) { return ys(+d.TimePerWeek) })
+                        )
+                        .attr("stroke", function (d) { return myColor(selectedGroup) })
+                }
+
+                // When the button is changed, run the updateChart function
+                d3.select("#selectButton").on("change", function (d) {
+                    // recover the option that has been chosen
+                    var selectedOption = d3.select(this).property("value")
+                    // run the updateChart function with this selected option
+                    update(selectedOption)
+
+                })
+
             }
         </script>
     </div>
