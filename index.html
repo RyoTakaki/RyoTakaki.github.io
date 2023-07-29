@@ -73,6 +73,41 @@
                         .style("opacity", 0.8)
                 }
 
+                // Features of the annotation
+                const annotations_max = [
+                    {
+                        note: {
+                            label: "Here is the annotation label",
+                            title: "Max"
+                        },
+                        x: 650,
+                        y: 250,
+                        dx: 100,
+                        dy: 50
+                    }
+                ]
+
+                // Features of the annotation
+                const annotations_min = [
+                    {
+                        note: {
+                            label: "Here is the annotation label",
+                            title: "Min"
+                        },
+                        x: 650,
+                        y: 450,
+                        dx: 100,
+                        dy: 50
+                    }
+                ]
+                // Add annotation to the chart
+                const makeAnnotations_max = d3.annotation()
+                    .annotations(annotations_max)
+
+                const makeAnnotations_min = d3.annotation()
+                    .annotations(annotations_min)
+                    
+
                 d3.select("#svg1")
                     .attr("width", width + margin.left + margin.right)
                     .attr("height", height + margin.top + margin.bottom)
@@ -90,6 +125,16 @@
                     .on("mouseover", mouseover)
                     .on("mousemove", mousemove)
                     .on("mouseleave", mouseleave);
+                
+                // Annotation
+                d3.select("#svg1")
+                .append("g")
+                .call(makeAnnotations_max);
+
+                // Annotation
+                d3.select("#svg1")
+                .append("g")
+                .call(makeAnnotations_min);
 
                 // Y axis
                 d3.select("#svg1")
@@ -181,17 +226,17 @@
                     .attr("transform", "translate(0," + height + ")")
                     .call(d3.axisBottom(xs).ticks(18));
 
-                svg.append("text" ,id="xaxis")
+                svg.append("text", id = "xaxis")
                     .attr("text-anchor", "middle")
                     .attr("x", width / 2)
                     .attr("y", height + 50)
                     .text("Week")
                     .style("font-family", "sans-serif")
                     .style("font-size", 20);
-                
-                svg.append("text",id="yaxis")
+
+                svg.append("text", id = "yaxis")
                     .attr("text-anchor", "middle")
-                    .attr("x", -height/2)
+                    .attr("x", -height / 2)
                     .attr("y", -40)
                     .attr("transform", "rotate(-90)")
                     .text("Total study hours per week [hour]")
@@ -262,7 +307,13 @@
         </script>
     </div>
 
+    <!-- Reference: https://d3-graph-gallery.com/graph/custom_annotation.html -->
+    <!-- Load d3.js -->
     <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <!-- Load d3-annotation -->
+    <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
+
     <script>
 
         function change_page(page_num) {
