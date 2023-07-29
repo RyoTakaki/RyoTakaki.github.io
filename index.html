@@ -80,6 +80,7 @@
                             label: "Here is the annotation label",
                             title: "Max"
                         },
+                        color: ["#69b3a2"],
                         x: 650,
                         y: 250,
                         dx: 100,
@@ -171,6 +172,48 @@
         <svg id="svg2"></svg>
         <script>
             async function init2() {
+                // Reference: https://d3-graph-gallery.com/graph/line_filter.html
+                const data = await d3.csv("https://flunky.github.io/cars2017.csv");
+                console.log(data);
+                var width = 800; var height = 500; var margin = 100;
+                var xs = d3.scaleLog().domain([10, 150]).range([0, width]);
+                var ys = d3.scaleLog().domain([10, 150]).range([height, 0]);
+                d3.select("#svg2")
+                    .attr("width", width + 2 * margin)
+                    .attr("height", height + 2 * margin)
+                    .append("g")
+                    .attr("transform", "translate(" + margin + "," + margin + ")")
+                    .selectAll()
+                    .data(data)
+                    .enter()
+                    .append("circle")
+                    .attr("cx", function (d, i) { return xs(d.AverageCityMPG) })
+                    .attr("cy", function (d, i) { return ys(Number(d.AverageHighwayMPG)) })
+                    .attr("r", function (d, i) { return 2 + Number(d.EngineCylinders) });
+                d3.select("#svg2")
+                    .append("g")
+                    .attr("transform", "translate(" + margin + "," + margin + ")")
+                    .call(d3.axisLeft(ys)
+                        .tickValues([10, 20, 50, 100])
+                        .tickFormat(d3.format("~s")));
+                d3.select("#svg2")
+                    .append("g")
+                    .attr("transform", "translate(" + margin + "," + (height + margin) + ")")
+                    .call(d3.axisBottom(xs)
+                        .tickValues([10, 20, 50, 100])
+                        .tickFormat(d3.format("~s")));
+            }
+        </script>
+    </div>
+
+    <div class="page" id="page3">
+        <h1>Page 3</h1>
+        <div>
+            <button onclick="change_page(2)">Prev.</button>
+        </div>
+        <svg id="svg3"></svg>
+        <script>
+            async function init3() {
                 // Reference: https://d3-graph-gallery.com/graph/connectedscatter_legend.html
                 const data = await d3.csv("https://RyoTakaki.github.io/Learning_time_week_time.csv");
                 console.log(data);
@@ -199,7 +242,7 @@
                     .x(function (d) { return xs(+d.week) })
                     .y(function (d) { return ys(+d.value) });
 
-                var svg = d3.select("#svg2")
+                var svg = d3.select("#svg3")
                     .attr("width", width + margin.left + margin.right)
                     .attr("height", height + margin.top + margin.bottom)
                     .append("g")
@@ -261,48 +304,6 @@
                         // Change the opacity: from 0 to 1 or from 1 to 0
                         d3.selectAll("." + d.name).transition().style("opacity", currentOpacity == 1 ? 0 : 1)
                     })
-            }
-        </script>
-    </div>
-
-    <div class="page" id="page3">
-        <h1>Page 3</h1>
-        <div>
-            <button onclick="change_page(2)">Prev.</button>
-        </div>
-        <svg id="svg3"></svg>
-        <script>
-            async function init3() {
-                // Reference: https://d3-graph-gallery.com/graph/line_filter.html
-                const data = await d3.csv("https://flunky.github.io/cars2017.csv");
-                console.log(data);
-                var width = 800; var height = 500; var margin = 100;
-                var xs = d3.scaleLog().domain([10, 150]).range([0, width]);
-                var ys = d3.scaleLog().domain([10, 150]).range([height, 0]);
-                d3.select("#svg3")
-                    .attr("width", width + 2 * margin)
-                    .attr("height", height + 2 * margin)
-                    .append("g")
-                    .attr("transform", "translate(" + margin + "," + margin + ")")
-                    .selectAll()
-                    .data(data)
-                    .enter()
-                    .append("circle")
-                    .attr("cx", function (d, i) { return xs(d.AverageCityMPG) })
-                    .attr("cy", function (d, i) { return ys(Number(d.AverageHighwayMPG)) })
-                    .attr("r", function (d, i) { return 2 + Number(d.EngineCylinders) });
-                d3.select("#svg3")
-                    .append("g")
-                    .attr("transform", "translate(" + margin + "," + margin + ")")
-                    .call(d3.axisLeft(ys)
-                        .tickValues([10, 20, 50, 100])
-                        .tickFormat(d3.format("~s")));
-                d3.select("#svg3")
-                    .append("g")
-                    .attr("transform", "translate(" + margin + "," + (height + margin) + ")")
-                    .call(d3.axisBottom(xs)
-                        .tickValues([10, 20, 50, 100])
-                        .tickFormat(d3.format("~s")));
             }
         </script>
     </div>
