@@ -19,12 +19,23 @@
 
         h1 {
             text-align: center;
+            font-family: sans-serif;
+        }
+
+        p {
+            font-size: 15px;
+            font-family: sans-serif;
+        }
+        
+        .annotation-note {
+            font-family: sans-serif;
         }
 
         button {
             width: 10em;
             height: 3em;
         }
+
         select {
             text-align: center;
             font-size: 15px;
@@ -32,13 +43,21 @@
             height: 3em;
         }
     </style>
+
+    <!-- Reference: https://d3-graph-gallery.com/graph/custom_annotation.html -->
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <!-- Load d3-annotation -->
+    <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
 </head>
 
 <body onload="init1(), init2(), init3()">
 
     <div style="text-align: center" , class="page active" id="page1">
         <h1>(1) Total study hours</h1>
-        <p>This chart shows the time I spent on each MCSDS subject. The data is based on my personal experience.<br> While study time may vary from person to person, I hope it helps with your future subject selection.</p>
+        <p>This chart shows the time I spent on each MCSDS subject. The data is based on my personal experience.<br>
+            While study time may vary from person to person, I hope it helps with your future subject selection.</p>
         <svg id="svg1"></svg>
         <script>
             async function init1() {
@@ -69,39 +88,40 @@
                     .range(d3.schemeSet2);
 
                 // Features of the annotation
-                const annotations_max = [
+                const annotations = [
                     {
                         note: {
-                            label: "Here is the annotation label",
-                            title: "No.1"
+                            label: "Personal note: This subject does not have exams but consists of multiple labs. Each lab requires a significant amount of time, but the content is challenging and very enjoyable.",
+                            title: "No.1: CS498 Internet of Things (350.1 hours)",
+                            wrap: 500,
                         },
-                        color: ["#69b3a2"],
-                        x: 382,
-                        y: 160,
+                        connector: {
+                            end: "dot",
+                        },
+                        x: 375,
+                        y: 220,
                         dx: 50,
                         dy: -80
-                    }
-                ]
-
-                // Features of the annotation
-                const annotations_min = [
+                    },
                     {
                         note: {
                             label: "Here is the annotation label",
                             title: "No.2"
                         },
-                        x: 968,
+                        connector: {
+                            end: "dot",
+                        },
+                        x: 960,
                         y: 600,
                         dx: 50,
                         dy: -80
                     }
                 ]
-                // Add annotation to the chart
-                const makeAnnotations_max = d3.annotation()
-                    .annotations(annotations_max)
 
-                const makeAnnotations_min = d3.annotation()
-                    .annotations(annotations_min)
+                // Add annotation to the chart
+                const makeAnnotations = d3.annotation()
+                    .type(d3.annotationCallout)
+                    .annotations(annotations)
 
                 d3.select("#svg1")
                     .attr("width", width + margin.left + margin.right)
@@ -121,12 +141,9 @@
                 // Annotation
                 d3.select("#svg1")
                     .append("g")
-                    .call(makeAnnotations_max);
+                    .attr("class", "annotation-group")
+                    .call(makeAnnotations);
 
-                // Annotation
-                d3.select("#svg1")
-                    .append("g")
-                    .call(makeAnnotations_min);
 
                 // Y axis
                 d3.select("#svg1")
@@ -157,8 +174,10 @@
                     .style("font-size", 20);
             }
         </script>
-        <p>Since the summer semester comprises only 12 weeks, and the other semesters have 16 weeks, simply checking the total study hours won't allow us to accurately determine the study load for each subject.
-            <br>Therefore, let's examine the weekly study hours to assess the study load for each subject. (Please note that CS598 Data Mining Capstone and CS416 Data Visualization are only offered during the summer.)
+        <p>Since the summer semester comprises only 12 weeks, and the other semesters have 16 weeks, simply checking the
+            total study hours won't allow us to accurately determine the study load for each subject.
+            <br>Therefore, let's examine the weekly study hours to assess the study load for each subject. (Please note
+            that CS598 Data Mining Capstone and CS416 Data Visualization are only offered during the summer.)
         </p>
         <div>
             <button onclick="change_page(2)">Next</button>
@@ -197,23 +216,40 @@
                     .range(d3.schemeSet2);
 
                 // Features of the annotation
-                const annotations_max_2 = [
+                const annotations = [
                     {
                         note: {
-                            label: "test test",
-                            title: "Here is the annotation label"
+                            label: "Here is the annotation label. Here is the annotation label. Here is the annotation label",
+                            title: "No.3",
+                            wrap: 500,
                         },
-                        color: ["#69b3a2"],
-                        x: 382,
-                        y: 160,
+                        connector: {
+                            end: "dot",
+                        },
+                        x: 345,
+                        y: 180,
+                        dx: 50,
+                        dy: -80
+                    },
+                    {
+                        note: {
+                            label: "Here is the annotation label",
+                            title: "No.4"
+                        },
+                        connector: {
+                            end: "dot",
+                        },
+                        x: 960,
+                        y: 600,
                         dx: 50,
                         dy: -80
                     }
                 ]
 
                 // Add annotation to the chart
-                const makeAnnotations_max_2 = d3.annotation()
-                    .annotations(annotations_max_2)
+                const makeAnnotations = d3.annotation()
+                    .type(d3.annotationCallout)
+                    .annotations(annotations)
 
                 d3.select("#svg2")
                     .attr("width", width + margin.left + margin.right)
@@ -233,7 +269,8 @@
                 // Annotation
                 d3.select("#svg2")
                     .append("g")
-                    .call(makeAnnotations_max_2);
+                    .attr("class", "annotation-group")
+                    .call(makeAnnotations);
 
                 // Y axis
                 d3.select("#svg2")
@@ -264,8 +301,12 @@
                     .style("font-size", 20);
             }
         </script>
-        <p>Now that we have the average weekly hours for each subject, it's essential to consider that some subjects may have a higher workload during the first half of the semester, while others might have a higher workload in the second half.
-            <br>For a visual representation of the number of weeks with higher study time for each subject, please refer to the line graph on the next page.</p>
+        <p>Now that we have the average weekly hours for each subject, it's essential to consider that some subjects may
+            have a higher workload during the first half of the semester, while others might have a higher workload in
+            the second half.
+            <br>For a visual representation of the number of weeks with higher study time for each subject, please refer
+            to the line graph on the next page.
+        </p>
         <div>
             <button onclick="change_page(1)">Go back</button>
             <button onclick="change_page(3)">Next</button>
@@ -391,20 +432,15 @@
 
             }
         </script>
-        <p>Syllabus for each subject can be found 
-        <a href="https://cs.illinois.edu/academics/graduate/professional-mcs/online-master-computer-science-data-science" target="_blank" rel="noopener noreferrer">here</a>
+        <p>Syllabus for each subject can be found
+            <a href="https://cs.illinois.edu/academics/graduate/professional-mcs/online-master-computer-science-data-science"
+                target="_blank" rel="noopener noreferrer">here</a>
         </p>
         <div>
             <button onclick="change_page(2)">Go back</button>
         </div>
     </div>
 
-    <!-- Reference: https://d3-graph-gallery.com/graph/custom_annotation.html -->
-    <!-- Load d3.js -->
-    <script src="https://d3js.org/d3.v5.min.js"></script>
-
-    <!-- Load d3-annotation -->
-    <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
 
     <script>
         function change_page(page_num) {
@@ -422,7 +458,7 @@
         // Reference: https://note.affi-sapo-sv.com/js-sleep.php
         const sleep = waitTime => new Promise(resolve => setTimeout(resolve, waitTime));
         const aFunc = async function () {
-            await sleep(200);
+            await sleep(250);
             active_page()
         }
         aFunc();
