@@ -37,7 +37,8 @@
 <body onload="init1(), init2(), init3()">
 
     <div style="text-align: center" , class="page active" id="page1">
-        <h1>Page 1</h1>
+        <h1>(1) Total study hours</h1>
+        <p>Page 1</p>
         <svg id="svg1"></svg>
         <script>
             async function init1() {
@@ -61,39 +62,6 @@
                     "CS441 Applied Machine Learning",
                     "CS416 Data Visualization"
                 ]
-                // create a tooltip
-                var Tooltip = d3.select("#page1")
-                    .append("div")
-                    .style("opacity", 0)
-                    .attr("class", "tooltip")
-                    .style("background-color", "white")
-                    .style("border", "solid")
-                    .style("border-width", "1px")
-                    .style("border-radius", "5px")
-                    .style("padding", "5px")
-
-                // Three function that change the tooltip when user hover / move / leave a cell
-                var mouseover = function (d) {
-                    Tooltip
-                        .style("opacity", 1)
-                    d3.select(this)
-                        .style("stroke", "grey")
-                        .style("opacity", 1)
-                }
-                var mousemove = function (d) {
-                    Tooltip
-                        .html("Total study hours: " + d.Total_hour + " [hour]")
-                        .style("position", "absolute")
-                        .style("left", (d3.mouse(this)[0] + margin.left) + "px")
-                        .style("top", (d3.mouse(this)[1] + margin.top + 50) + "px")
-                }
-                var mouseleave = function (d) {
-                    Tooltip
-                        .style("opacity", 0)
-                    d3.select(this)
-                        .style("stroke", "none")
-                        .style("opacity", 0.8)
-                }
 
                 // A color scale: one color for each group
                 var myColor = d3.scaleOrdinal()
@@ -105,7 +73,7 @@
                     {
                         note: {
                             label: "Here is the annotation label",
-                            title: "Max"
+                            title: "No.1"
                         },
                         color: ["#69b3a2"],
                         x: 382,
@@ -120,7 +88,7 @@
                     {
                         note: {
                             label: "Here is the annotation label",
-                            title: "Min"
+                            title: "No.2"
                         },
                         x: 968,
                         y: 600,
@@ -148,10 +116,7 @@
                     .attr("y", function (d) { return ys(d.Total_hour); })
                     .attr("height", function (d) { return height - ys(d.Total_hour) })
                     .attr("width", xs.bandwidth())
-                    .attr("fill", function (d) { return myColor(d.Course) })
-                    .on("mouseover", mouseover)
-                    .on("mousemove", mousemove)
-                    .on("mouseleave", mouseleave);
+                    .attr("fill", function (d) { return myColor(d.Course) });
 
                 // Annotation
                 d3.select("#svg1")
@@ -180,24 +145,27 @@
                     .attr("transform", "translate(-10, 0)rotate(-30)")
                     .style("text-anchor", "end");
 
+                // Y axis label
                 d3.select("#svg1")
                     .append("text")
                     .attr("text-anchor", "middle")
                     .attr("x", -margin.top - height / 2)
                     .attr("y", margin.left - 50)
                     .attr("transform", "rotate(-90)")
-                    .text("Total study hours per subject [hour]")
+                    .text("Total study hours [hour]")
                     .style("font-family", "sans-serif")
                     .style("font-size", 20);
             }
         </script>
+        <p>Since there are only 12 weeks in the summer semester and 16 weeks in the other semesters, it is impossible to ascertain the study load for each subject simply by checking the total study hours.<br>So, let's look at the weekly study hours to see the study load for each subject.</p>
         <div>
             <button onclick="change_page(2)">Next</button>
         </div>
     </div>
 
     <div style="text-align: center" , class="page active" id="page2">
-        <h1>Page 2</h1>
+        <h1>(2) Average weekly study hours</h1>
+        <p>some texts</p>
         <svg id="svg2"></svg>
         <script>
             async function init2() {
@@ -221,39 +189,6 @@
                     "CS441 Applied Machine Learning",
                     "CS416 Data Visualization"
                 ]
-                // create a tooltip
-                var Tooltip = d3.select("#page2")
-                    .append("div")
-                    .style("opacity", 0)
-                    .attr("class", "tooltip")
-                    .style("background-color", "white")
-                    .style("border", "solid")
-                    .style("border-width", "1px")
-                    .style("border-radius", "5px")
-                    .style("padding", "5px")
-
-                // Three function that change the tooltip when user hover / move / leave a cell
-                var mouseover = function (d) {
-                    Tooltip
-                        .style("opacity", 1)
-                    d3.select(this)
-                        .style("stroke", "grey")
-                        .style("opacity", 1)
-                }
-                var mousemove = function (d) {
-                    Tooltip
-                        .html("Total study hours per week: " + d.Ave_time_week + " [hour]")
-                        .style("position", "absolute")
-                        .style("left", (d3.mouse(this)[0] + margin.left) + "px")
-                        .style("top", (d3.mouse(this)[1] + margin.top + 50) + "px")
-                }
-                var mouseleave = function (d) {
-                    Tooltip
-                        .style("opacity", 0)
-                    d3.select(this)
-                        .style("stroke", "none")
-                        .style("opacity", 0.8)
-                }
 
                 // A color scale: one color for each group
                 var myColor = d3.scaleOrdinal()
@@ -292,10 +227,7 @@
                     .attr("y", function (d) { return ys(d.Ave_time_week); })
                     .attr("height", function (d) { return height - ys(d.Ave_time_week) })
                     .attr("width", xs.bandwidth())
-                    .attr("fill", function (d) { return myColor(d.Course) })
-                    .on("mouseover", mouseover)
-                    .on("mousemove", mousemove)
-                    .on("mouseleave", mouseleave);
+                    .attr("fill", function (d) { return myColor(d.Course) });
 
                 // Annotation
                 d3.select("#svg2")
@@ -319,25 +251,28 @@
                     .attr("transform", "translate(-10, 0)rotate(-30)")
                     .style("text-anchor", "end");
 
+                // Y axis label
                 d3.select("#svg2")
                     .append("text")
                     .attr("text-anchor", "middle")
                     .attr("x", -margin.top - height / 2)
                     .attr("y", margin.left - 50)
                     .attr("transform", "rotate(-90)")
-                    .text("Total study hours per week [hour]")
+                    .text("Average weekly study hours [hour]")
                     .style("font-family", "sans-serif")
                     .style("font-size", 20);
             }
         </script>
+        <p>We now know the average weekly hours for each subject. However, some subjects have a higher load in the first half of the semester, while others have a higher load in the second half.<br>So, please check the next page for a line graph showing how many weeks of study time was higher for each subject.</p>
         <div>
-            <button onclick="change_page(1)">Prev...</button>
+            <button onclick="change_page(1)">Go back</button>
             <button onclick="change_page(3)">Next</button>
         </div>
     </div>
 
-    <div style="text-align: center" , class="page" id="page3">
-        <h1>Page 3</h1>
+    <div style="text-align: center" , class="page active" id="page3">
+        <h1>Weekly study hours</h1>
+        <p>You can specify which subject data to display by selecting a subject name from the options below.</p>
         <!-- Initialize a select button -->
         <div><select id="selectButton"></select></div>
         <svg id="svg3"></svg>
@@ -421,7 +356,7 @@
                     .attr("x", -height / 2)
                     .attr("y", -50)
                     .attr("transform", "rotate(-90)")
-                    .text("Total study hours per week [hour]")
+                    .text("Weekly study hours [hour]")
                     .style("font-family", "sans-serif")
                     .style("font-size", 20);
 
@@ -454,8 +389,9 @@
 
             }
         </script>
+        <p>https://cs.illinois.edu/academics/graduate/professional-mcs/online-master-computer-science-data-science</p>
         <div>
-            <button onclick="change_page(2)">Prev.</button>
+            <button onclick="change_page(2)">Go back</button>
         </div>
     </div>
 
@@ -482,7 +418,7 @@
         // Reference: https://note.affi-sapo-sv.com/js-sleep.php
         const sleep = waitTime => new Promise(resolve => setTimeout(resolve, waitTime));
         const aFunc = async function () {
-            await sleep(50);
+            await sleep(100);
             active_page()
         }
         aFunc();
