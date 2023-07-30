@@ -136,7 +136,7 @@
                     .attr("y", function (d) { return ys(d.Total_hour); })
                     .attr("height", function (d) { return height - ys(d.Total_hour) })
                     .attr("width", xs.bandwidth())
-                    .attr("fill", function(d){ return myColor(d.Course) })
+                    .attr("fill", function (d) { return myColor(d.Course) })
                     .on("mouseover", mouseover)
                     .on("mousemove", mousemove)
                     .on("mouseleave", mouseleave);
@@ -171,7 +171,7 @@
                 d3.select("#svg1")
                     .append("text")
                     .attr("text-anchor", "middle")
-                    .attr("x", -margin.top - height/2)
+                    .attr("x", -margin.top - height / 2)
                     .attr("y", margin.left - 50)
                     .attr("transform", "rotate(-90)")
                     .text("Total study hours per subject [hour]")
@@ -181,7 +181,7 @@
         </script>
     </div>
 
-    <div class="page" id="page2">
+    <div class="page active" id="page2">
         <h1>Page 2</h1>
         <div>
             <button onclick="change_page(1)">Prev...</button>
@@ -250,11 +250,11 @@
                     .range(d3.schemeSet2);
 
                 // Features of the annotation
-                const annotations_max = [
+                const annotations_max_2 = [
                     {
                         note: {
-                            label: "Here is the annotation label",
-                            title: "MaxMaxMaxMaxMax"
+                            label: "test test",
+                            title: "Here is the annotation label"
                         },
                         color: ["#69b3a2"],
                         x: 382,
@@ -264,25 +264,9 @@
                     }
                 ]
 
-                // Features of the annotation
-                const annotations_min = [
-                    {
-                        note: {
-                            label: "test",
-                            title: "MinMinMinMinMin"
-                        },
-                        x: 1000,
-                        y: 300,
-                        dx: 50,
-                        dy: 80
-                    }
-                ]
                 // Add annotation to the chart
-                const makeAnnotations_max = d3.annotation()
-                    .annotations(annotations_max)
-
-                const makeAnnotations_min = d3.annotation()
-                    .annotations(annotations_min)
+                const makeAnnotations_max_2 = d3.annotation()
+                    .annotations(annotations_max_2)
 
                 d3.select("#svg2")
                     .attr("width", width + margin.left + margin.right)
@@ -297,7 +281,7 @@
                     .attr("y", function (d) { return ys(d.Ave_time_week); })
                     .attr("height", function (d) { return height - ys(d.Ave_time_week) })
                     .attr("width", xs.bandwidth())
-                    .attr("fill", function(d){ return myColor(d.Course) })
+                    .attr("fill", function (d) { return myColor(d.Course) })
                     .on("mouseover", mouseover)
                     .on("mousemove", mousemove)
                     .on("mouseleave", mouseleave);
@@ -305,12 +289,7 @@
                 // Annotation
                 d3.select("#svg2")
                     .append("g")
-                    .call(makeAnnotations_max);
-
-                // Annotation
-                d3.select("#svg2")
-                    .append("g")
-                    .call(makeAnnotations_min);
+                    .call(makeAnnotations_max_2);
 
                 // Y axis
                 d3.select("#svg2")
@@ -332,7 +311,7 @@
                 d3.select("#svg2")
                     .append("text")
                     .attr("text-anchor", "middle")
-                    .attr("x", -margin.top - height/2)
+                    .attr("x", -margin.top - height / 2)
                     .attr("y", margin.left - 50)
                     .attr("transform", "rotate(-90)")
                     .text("Total study hours per week [hour]")
@@ -473,14 +452,25 @@
     <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
 
     <script>
-
         function change_page(page_num) {
-            // Hide all pages
             d3.selectAll(".page").classed("active", false);
-
-            // Only show the selected page
             d3.select("#page" + page_num).classed("active", true);
         }
+    </script>
+    <script>
+        function active_page() {
+            d3.selectAll(".page").classed("active", false);
+            d3.select("#page1").classed("active", true);
+        }
+
+        // wait 50ms to make d3.annotation works properly
+        // Reference: https://note.affi-sapo-sv.com/js-sleep.php
+        const sleep = waitTime => new Promise(resolve => setTimeout(resolve, waitTime));
+        const aFunc = async function () {
+            await sleep(50);
+            active_page()
+        }
+        aFunc();
     </script>
 </body>
 
