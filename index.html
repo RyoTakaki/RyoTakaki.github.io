@@ -29,6 +29,7 @@
         
         .annotation-note {
             font-family: sans-serif;
+            font-size: 13px;
         }
 
         button {
@@ -91,30 +92,31 @@
                 const annotations = [
                     {
                         note: {
-                            label: "Personal note: This subject does not have exams but consists of multiple labs. Each lab requires a significant amount of time, but the content is challenging and very enjoyable.",
-                            title: "No.1: CS498 Internet of Things (350.1 hours)",
+                            label: "This subject does not have exams but consists of multiple labs. Each lab requires a significant amount of time, but the content is challenging and very enjoyable.",
+                            title: "Note: CS498 Internet of Things (350.1 hours)",
                             wrap: 500,
                         },
                         connector: {
                             end: "dot",
                         },
-                        x: 375,
-                        y: 220,
+                        x: 345,
+                        y: 180,
                         dx: 50,
                         dy: -80
                     },
                     {
                         note: {
-                            label: "Here is the annotation label",
-                            title: "No.2"
+                            label: "The study hours for this course were the shortest among all subjects, and I felt I learned the least from it. For a deeper understanding of machine learning, I recommend taking PSL (Practical Statistical Learning).",
+                            title: "Note: CS441 Applied Machine Learning (57.3 hours)",
+                            wrap: 500,
                         },
                         connector: {
                             end: "dot",
                         },
-                        x: 960,
+                        x: 980,
                         y: 600,
-                        dx: 50,
-                        dy: -80
+                        dx: -50,
+                        dy: -300
                     }
                 ]
 
@@ -325,7 +327,7 @@
                 // Reference: https://d3-graph-gallery.com/graph/line_filter.html
                 const data = await d3.csv("https://RyoTakaki.github.io/Learning_time_week_time_per_course.csv");
                 console.log(data);
-                var margin = { top: 50, right: 50, bottom: 50, left: 150 },
+                var margin = { top: 50, right: 150, bottom: 50, left: 150 },
                     width = 1200 - margin.left - margin.right,
                     height = 700 - margin.top - margin.bottom;
 
