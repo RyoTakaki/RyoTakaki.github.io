@@ -16,16 +16,28 @@
         .axis text {
             font-size: 15px;
         }
+
+        h1 {
+            text-align: center;
+        }
+
+        button {
+            width: 10em;
+            height: 3em;
+        }
+        select {
+            text-align: center;
+            font-size: 15px;
+            width: 30em;
+            height: 3em;
+        }
     </style>
 </head>
 
 <body onload="init1(), init2(), init3()">
 
-    <div class="page active" id="page1">
+    <div style="text-align: center" , class="page active" id="page1">
         <h1>Page 1</h1>
-        <div>
-            <button onclick="change_page(2)">Next</button>
-        </div>
         <svg id="svg1"></svg>
         <script>
             async function init1() {
@@ -179,14 +191,13 @@
                     .style("font-size", 20);
             }
         </script>
+        <div>
+            <button onclick="change_page(2)">Next</button>
+        </div>
     </div>
 
-    <div class="page active" id="page2">
+    <div style="text-align: center" , class="page active" id="page2">
         <h1>Page 2</h1>
-        <div>
-            <button onclick="change_page(1)">Prev...</button>
-            <button onclick="change_page(3)">Next</button>
-        </div>
         <svg id="svg2"></svg>
         <script>
             async function init2() {
@@ -319,15 +330,16 @@
                     .style("font-size", 20);
             }
         </script>
+        <div>
+            <button onclick="change_page(1)">Prev...</button>
+            <button onclick="change_page(3)">Next</button>
+        </div>
     </div>
 
-    <div class="page" id="page3">
+    <div style="text-align: center" , class="page" id="page3">
         <h1>Page 3</h1>
-        <div>
-            <button onclick="change_page(2)">Prev.</button>
-            <!-- Initialize a select button -->
-            <select id="selectButton"></select>
-        </div>
+        <!-- Initialize a select button -->
+        <div><select id="selectButton"></select></div>
         <svg id="svg3"></svg>
         <script>
             async function init3() {
@@ -407,7 +419,7 @@
                 svg.append("text", id = "yaxis")
                     .attr("text-anchor", "middle")
                     .attr("x", -height / 2)
-                    .attr("y", -40)
+                    .attr("y", -50)
                     .attr("transform", "rotate(-90)")
                     .text("Total study hours per week [hour]")
                     .style("font-family", "sans-serif")
@@ -442,6 +454,9 @@
 
             }
         </script>
+        <div>
+            <button onclick="change_page(2)">Prev.</button>
+        </div>
     </div>
 
     <!-- Reference: https://d3-graph-gallery.com/graph/custom_annotation.html -->
